@@ -19,4 +19,20 @@ class Controller
     {
         $this->container = $container;
     }
+
+    protected function view($path, array $data = [])
+    {
+         /** @var View $view */
+        $view = $this->container->get("view");
+         /** @var Response $response */
+        $response = $this->container->get("response");
+         /** @var Router $response */
+        $router = $this->container->get("router");
+
+        $content = $view->render($path, $data);
+
+        $response->setContent($content)->setCode(200)->setUrl($router->getCurrentUrl());
+
+        return $response;
+    }
 }

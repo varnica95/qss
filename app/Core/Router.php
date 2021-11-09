@@ -23,6 +23,16 @@ class Router
     }
 
     /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public function getCurrentUrl()
+    {
+        return $_SERVER["HTTP_HOST"] . $this->path;
+    }
+
+    /**
      * @param string $route
      * @param array $handler
      * @param array|string[] $methods

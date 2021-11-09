@@ -76,6 +76,10 @@ class Container
          * Save container item to the cache
          */
         $item = $this->items[$name];
+        if(method_exists($item, "setContainer") === true){
+            $item->setContainer($this);
+        }
+
         $this->cache[$name] = $item;
 
         return $item;
