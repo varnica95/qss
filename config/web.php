@@ -1,5 +1,6 @@
 <?php
 
-$app->get("/home/{uuu}/{aag}", ["ff"]);
+$app->get("/login", [Qss\Http\Controllers\LoginController::class, "index"]);
+$app->get("/home", [Qss\Http\Controllers\HomeController::class, "index"]);
 
 return $app;
