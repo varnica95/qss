@@ -44,11 +44,11 @@ class Router
         $route = $this->matchRoute();
 
         if($route === false){
-            throw new Exception("Route not found");
+            throw new \Exception("Route: " . $this->path . " not found");
         }
 
         if (in_array($_SERVER["REQUEST_METHOD"], $this->methods[$route]) === false){
-            throw new Exception("Method not allowed");
+            throw new \Exception("Method: " . $_SERVER["REQUEST_METHOD"] . " not allowed");
         }
 
         return $this->routes[$route];
@@ -82,6 +82,12 @@ class Router
         
             //Continue if it is not matched
             if(preg_match('/^' . $expression . '/', $this->path, $matched) === 0){
+                continue;
+            }
+
+            // Sometimes it matched the path without any parameters
+            // example: Route: /users, given /users/{id}
+            if(count($matched) === 1){
                 continue;
             }
 
