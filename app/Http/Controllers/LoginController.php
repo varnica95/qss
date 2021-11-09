@@ -2,6 +2,7 @@
 
 namespace Qss\Http\Controllers;
 
+use Qss\Http\Request;
 use Qss\Core\Controller;
 
 
@@ -12,8 +13,8 @@ class LoginController extends Controller
         return $this->view("home.index", ["id" => 5]);
     }
 
-    public function login()
+    public function login(Request $request)
     {
-        dd($_GET);
+        dd($request->get("email"));
     }
 }

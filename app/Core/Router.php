@@ -53,14 +53,21 @@ class Router
     {
         $route = $this->matchRoute();
 
+        /**
+         * If it is false, the route does not exist
+         */
         if($route === false){
             throw new \Exception("Route: " . $this->path . " not found");
         }
 
+        /**
+         * Checking if the request method is allowed
+         */
         if (in_array($_SERVER["REQUEST_METHOD"], $this->methods[$route]) === false){
             throw new \Exception("Method: " . $_SERVER["REQUEST_METHOD"] . " not allowed");
         }
 
+        /** return route's handler */
         return $this->routes[$route];
     }
 
@@ -86,21 +93,17 @@ class Router
 
             // escape slashes
             $expression = preg_replace('/\//', '\\/', $route);
-            // match what ever is between {} and save it as the name
+            // match what ever is between {} and save it as the given name
             $expression = preg_replace('/{([a-z]+)}/i', '(?P<\1>[^\.]+)', $expression);
 
         
             //Continue if it is not matched
-            if(preg_match('/^' . $expression . '/', $this->path, $matched) === 0){
-                continue;
-            }
-
             // Sometimes it matched the path without any parameters
-            // example: Route: /users, given /users/{id}
-            if(count($matched) === 1){
+                    // example: Route: /users, given /users/{id}
+            if((preg_match('/^' . $expression . '/', $this->path, $matched) === 0) || count($matched) === 1){
                 continue;
             }
-
+          
             // add parameters from matched to the property
             foreach ($matched as $key => $value) {
                 

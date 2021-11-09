@@ -4,18 +4,11 @@ namespace Qss\Http;
 
 use Qss\Container;
 
-class Response
+class Request
 {
 
     /** @var $container */
     private $container;
-    /** @var $content */
-    private $content;
-    /** @var $code */
-    private $code;
-    /** @var $url */
-    private $url;
-
 
     /**
      * Undocumented function
@@ -31,80 +24,22 @@ class Response
     /**
      * Undocumented function
      *
-     * @param string $content
+     * @param [type] $name
+     * @return void
      */
-    public function __construct($content = '', $status = 200)
+    public function get($name)
     {
-       $this->content = $content;
-       $this->code = $status;
+        return $this->container->get("parameter_bag")->get($name, "post");
     }
 
     /**
      * Undocumented function
      *
-     * @param [type] $content
+     * @param [type] $name
      * @return void
      */
-    public function setContent($content)
+    public function query($name)
     {
-        $this->content = $content;
-
-        return $this;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param [type] $code
-     * @return void
-     */
-    public function setCode($code)
-    {
-        $this->code = $code;
-
-        return $this;
-    }
-    
-    /**
-     * Undocumented function
-     *
-     * @return void
-     */
-    public function getContent()
-    {
-        return $this->content; 
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @return void
-     */
-    public function getCode()
-    {
-        return $this->code; 
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param [type] $route
-     * @return void
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
-
-        return $this;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @return void
-     */
-    public function getUrl()
-    {
-        return $this->url;
+        return $this->container->get("parameter_bag")->get($name, "get");
     }
 }

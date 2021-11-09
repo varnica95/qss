@@ -20,7 +20,14 @@ class Controller
         $this->container = $container;
     }
 
-    protected function view($path, array $data = [])
+    /**
+     * Creating a view
+     *
+     * @param string $path
+     * @param array $data
+     * @return void
+     */
+    protected function view(string $path, array $data = [])
     {
          /** @var View $view */
         $view = $this->container->get("view");
