@@ -4,7 +4,7 @@ namespace Qss\Http\Controllers;
 
 use Qss\Http\Request;
 use Qss\Core\Controller;
-
+use Qss\QSymfonySkeletonApi\QssApiService;
 
 class LoginController extends Controller
 {
@@ -13,8 +13,11 @@ class LoginController extends Controller
         return $this->view("home.index", ["id" => 5]);
     }
 
-    public function login(Request $request)
+    public function login(Request $request, QssApiService $qssApiService)
     {
-        dd($request->get("email"));
+        $email = $request->get("email");
+        $password = $request->get("password");
+
+        $qssApiService->auth($email, $password);
     }
 }

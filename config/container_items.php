@@ -6,4 +6,5 @@ return [
   "response" => Qss\Http\Response::class,
   "request" => Qss\Http\Request::class,
   "parameter_bag" => Qss\Bags\ParameterBag::class,
+  "qss_api_service" =>  Qss\QSymfonySkeletonApi\QssApiService::class,
 ];
