@@ -17,9 +17,9 @@ class View
         $part = str_replace(".", "\\", $path);
         $file = $this->getFile($part);
        
-        $documentName = ucfirst(explode(".", $path)[0]);
+        $document_name = ucfirst(explode(".", $path)[0]);
 
-        array_push($data, $documentName, $file);
+        array_push($data, $document_name, $file);
 
         extract($data, EXTR_SKIP);
        

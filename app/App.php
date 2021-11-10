@@ -118,11 +118,20 @@ class App
             
             $className = strtolower(preg_replace(['/([a-z\d])([A-Z])/', '/([^_])([A-Z][a-z])/'], '$1_$2', end($exploded)));
 
+            
+
             /**
              * Property must be in the container
              */
-            $request = $this->container->get($className);
-            $methodProperties[] = $request;
+            $prop = $this->container->get($className);
+
+            if($className === "request"){
+                $middleware = $this->container->get('middleware');
+
+                $request = $middleware->handle($prop);
+            }
+
+            $methodProperties[] = $prop;
         }
 
         return $methodProperties;

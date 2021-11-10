@@ -21,6 +21,23 @@ class Controller
     }
 
     /**
+     * Undocumented function
+     *
+     * @param [type] $url
+     * @return void
+     */
+    protected function redirect($url)
+    {
+        /** @var Response $response */
+        $response = $this->container->get("response");
+        
+        $response->setCode(301);
+        $response->setUrl($url);
+
+        return $response;
+    }
+
+    /**
      * Creating a view
      *
      * @param string $path
@@ -38,7 +55,7 @@ class Controller
 
         $content = $view->render($path, $data);
 
-        $response->setContent($content)->setCode(200)->setUrl($router->getCurrentUrl());
+        $response->setContent($content);
 
         return $response;
     }

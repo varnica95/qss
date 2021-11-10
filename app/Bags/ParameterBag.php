@@ -20,7 +20,6 @@ class ParameterBag
         $this->parameters["get"] = $_GET;
     }
 
-
     /**
      * Undocumented function
      *
@@ -30,6 +29,27 @@ class ParameterBag
     public function get($name, $method = "post")
     {
       return $this->parameters[$method][$name] ?? throw new \Exception("Does not exist");
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param [type] $name
+     * @return boolean
+     */
+    public function has($name)
+    {
+      return isset($this->parameters["post"][$name]);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public function getAll()
+    {
+      return $this->parameters["post"];
     }
 
 }

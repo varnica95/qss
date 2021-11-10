@@ -12,6 +12,14 @@ class Router
     protected $path;
     /** @var $parameters */
     protected $parameters;
+    /** @var $matchedRoute */
+    protected $matchedRoute;
+
+
+    public function getMatchedRoute()
+    {
+        return $this->matchedRoute;
+    }
 
     /**
      * @param string $path
@@ -82,6 +90,7 @@ class Router
          * If the route is set in the array, return the route
          */
         if (isset($this->routes[$this->path])){
+            $this->matchedRoute = $this->path;
             return $this->path;
         }
 
@@ -117,6 +126,9 @@ class Router
                     $this->parameters[$key] = $value;
                 }
             }
+
+            $this->matchedRoute = $matched[0];
+            dd($this->matchedRoute);
 
             // return matched route
             return $route;

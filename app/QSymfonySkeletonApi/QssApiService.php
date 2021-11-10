@@ -3,6 +3,7 @@
 namespace Qss\QSymfonySkeletonApi;
 
 use Qss\Container;
+use Qss\Includes\Session;
 
 class QssApiService
 {
@@ -63,7 +64,7 @@ class QssApiService
         $responseArray = json_decode($response, TRUE);
 
         if(isset($responseArray["error"])){
-            $ret["messaege"] = $responseArray["error"];
+            $ret["message"] = $responseArray["error"];
             return $ret;
         }
 
@@ -73,7 +74,13 @@ class QssApiService
         return $ret;
     }
 
-
+    /**
+     * Undocumented function
+     *
+     * @param [type] $email
+     * @param [type] $password
+     * @return void
+     */
     public function auth($email, $password)
     {
       
@@ -82,9 +89,23 @@ class QssApiService
         $dataJson = json_encode($data);
 
         $response = $this->callCUrl($url, "POST", [], $dataJson);
-        if($response["error"] === true){
-            return $response;
-        }
 
+        return $response;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public function getCurrentlyLoggedUser()
+    {
+        $url = self::API_URL . "me";
+
+        $headers = array("Authorization: Bearer " . Session::get('session_token'));
+
+        $response = $this->callCUrl($url, "GET", $headers);
+
+        return $response;
     }
 }
