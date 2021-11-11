@@ -7,12 +7,16 @@ Created by: Marin Varnica
 - [Getting started](#getting-started)
 - [App](#app)
     - [Running the web app](#running-the-web-app)
-    - [Getting a container item](#getting-a-container-item)
+    - [Processing the handler](#processing-the-handler)
+    - [Responding to the front](responding-to-the-front)
 - [Container](#container)
     - [Add a container item](#add-a-container-item)
     - [Getting a container item](#getting-a-container-item)
 - [Routes](#routes)
     - [Registering a route](#registering-a-route)
+    - [Matching a route](#matching-a-route)
+- [Http](#http)
+    - [Controllers](#controllers)
     - [Matching a route](#matching-a-route)
 
 # Getting started
@@ -29,18 +33,83 @@ The App class is the main class for the project. It is creating new Container cl
 
 ## Running the web app
 
-- To add an item, go to "config/container_items.php"
-- The file returns associative array where the key must be a snake_case format.
+- This refers to App's method "run"
+- In this method is passing the current path to the router, getting handler from the matched route, processing it and giving the respond
 
 ```php
 <?php
 
-return [
-  "router" => Qss\Core\Router::class
-];
+/**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public function run()
+    {
+        /** @var Router $router */
+        $router = $this->container->get("router");
+
+        // same as PATH_INFO
+        $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $router->setPath($currentPath);
+
+        /**
+         * Trying to get the handler from the route and getting a respond
+         */
+        try{
+            $handler = $router->getRouteHandler();
+            $respond = $this->processHandler($handler);
+        } catch(\Exception $e){
+            dd($e);
+
+            /**
+             * //todo: 404
+             */
+        }
+        
+        return $this->processRespond($respond);
+    }
 ```
 
+## Processing the handler
 
+- This refers to App's method "processHandler"
+- In this method it is instantiating the controller class and it's passing properties if there is any (Dependeny injection)
+
+## Responding to the front
+
+- This refers to App's method "processRespond"
+- Every controller must return Response.
+- In this method it is getting all the info from the Response
+
+```php
+<?php
+
+    /**
+     * Process respond
+     *
+     * @param [type] $respond
+     * @return void
+     */
+    private function processRespond($respond)
+    {
+
+        if (!$respond instanceof Response){
+            echo $respond;
+            return true;
+        }
+    
+        header("Location: " . $respond->getUrl(), true, $respond->getCode());
+
+        if(is_readable($respond->getContent())){
+            include $respond->getContent();
+        } else {
+            echo $respond->getContent();
+        }
+
+        return true;
+    }
+```
 
 # Container
 
@@ -162,3 +231,17 @@ todo: 404
         return $this->routes[$route];
     }
 ```
+
+# Http
+
+- Http includes:
+    - Controllers
+    - Request
+    - Response
+
+## Controllers
+
+- Every created controller must have the method written in "config/web.php"
+- Each method includes dependeny injection (autowiring)
+    - It can have Request
+    - It must return Response
