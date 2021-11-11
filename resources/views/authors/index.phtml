@@ -1,0 +1,54 @@
+<table>
+  <tr>
+    <th>ID</th>
+    <th>First name</th>
+    <th>Last name</th>
+    <th>Birthday</th>
+    <th>Gender</th>
+    <th>Place of birth</th>
+  </tr>
+  <?php foreach ($authors as $author): ?>
+    <tr>
+        <td> <a href="/authors/<?php echo $author["id"]; ?>"><?php echo $author["id"]; ?></a></td>
+        <td>  <?php echo $author["first_name"]; ?></td>
+        <td>  <?php echo $author["last_name"]; ?></td>
+        <td>  <?php echo $author["birthday"]; ?></td>
+        <td>  <?php echo $author["gender"]; ?></td>
+        <td>  <?php echo $author["place_of_birth"]; ?></td>
+    </tr>
+  <?php endforeach; ?>
+</table>
+
+<div class="pagination">
+    <?php for ($i = 1; $i <= $meta["total_pages"]; ++$i): ?>
+        <a href="/authors?page=<?php echo $i ?>"><?php echo $i ?></a>
+    <?php endfor; ?>
+</div>
+
+
+<h3>Custom query</h3>
+
+<form action="/authors" method="GET">
+  
+    <div class="form-group">
+        <label for="orderBy">Order by</label>
+        <input type="text" placeholder="Enter order" name="orderBy">
+    </div>
+
+    <div class="form-group">
+        <label for="direction">Direction</label>
+        <input type="text" placeholder="ASC or DESC" name="direction">
+    </div>
+    
+    <div class="form-group">
+        <label for="limit">limit</label>
+        <input type="text" placeholder="ASC or DESC" name="limit">
+    </div>
+
+    <div class="form-group">
+        <label for="page">Page</label>
+        <input type="text" placeholder="page" name="page">
+    </div>
+
+    <button type="submit">Generate</button>  
+</form>

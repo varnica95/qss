@@ -1,0 +1,40 @@
+<?php if($author === null): ?>
+  <p>Author not found</p>
+  <?php else: ?>
+<div>
+    <p>Name: <?php echo $author["first_name"] . " " . $author["last_name"]; ?></p>
+    <p>Birthday: <?php echo $author["birthday"]; ?></p>
+    <p>Biography: <?php echo $author["biography"]; ?></p>
+    <p>Gender: <?php echo $author["gender"]; ?></p>
+    <p>Place of birth: <?php echo $author["place_of_birth"]; ?></p>
+</div>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Title</th>
+    <th>Release date</th>
+    <th>ISBN</th>
+    <th>Format</th>
+    <th>Number of pages</th>
+    <th>Action</th>
+  </tr>
+  <?php foreach ($author["books"] as $book): ?>
+    <tr>
+        <td>  <?php echo $book["id"]; ?></td>
+        <td>  <?php echo $book["title"]; ?></td>
+        <td>  <?php echo $book["release_date"]; ?></td>
+        <td>  <?php echo $book["isbn"]; ?></td>
+        <td>  <?php echo $book["format"]; ?></td>
+        <td>  <?php echo $book["number_of_pages"]; ?></td>
+        <td>
+          
+            <form action="/authors/<?php echo $author["id"]; ?>/books/<?php echo $book["id"]; ?>/delete" method="POST">
+                <button type="submit">Delete</button>  
+            </form>
+        
+        </td>
+    </tr>
+  <?php endforeach; ?>
+</table>
+<?php endif; ?>
