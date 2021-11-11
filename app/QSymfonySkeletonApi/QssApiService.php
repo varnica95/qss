@@ -93,19 +93,36 @@ class QssApiService
         return $response;
     }
 
+   
     /**
      * Undocumented function
      *
      * @return void
      */
-    public function getCurrentlyLoggedUser()
+    public function get(string $method, string $query = null)
     {
-        $url = self::API_URL . "me";
+        $url = self::API_URL . $method . $query;
 
         $headers = array("Authorization: Bearer " . Session::get('session_token'));
 
         $response = $this->callCUrl($url, "GET", $headers);
 
+        return $response;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public function deleteBook(string $bookId)
+    {
+        $url = self::API_URL . "books/" . $bookId;
+
+        $headers = array("Authorization: Bearer " . Session::get('session_token'));
+
+        $response = $this->callCUrl($url, "DELETE", $headers);
+        
         return $response;
     }
 }

@@ -102,7 +102,16 @@ class App
         foreach ($properties as $property) {
 
             if(!$property->hasType()){
-                throw new \Exception("Typehint missing");
+
+                $routeParameters = $this->container->get("router")->getParameters();
+
+            
+                if(!isset($routeParameters[$property->name])){
+                    throw new \Exception("Error: Parameter does not exist");
+                } 
+
+                $methodProperties[] = $routeParameters[$property->name];
+                continue;
             }
 
             $class = $property->getType()->getName();

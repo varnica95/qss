@@ -21,6 +21,11 @@ class Router
         return $this->matchedRoute;
     }
 
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
     /**
      * @param string $path
      * Method for setting the current path
@@ -104,7 +109,6 @@ class Router
             $expression = preg_replace('/\//', '\\/', $route);
             // match what ever is between {} and save it as the given name
             $expression = preg_replace('/{([a-z]+)}/i', '(?P<\1>[^\.]+)', $expression);
-
         
             //Continue if it is not matched
             // Sometimes it matched the path without any parameters
@@ -112,7 +116,7 @@ class Router
             if((preg_match('/^' . $expression . '/', $this->path, $matched) === 0) || count($matched) === 1){
                 continue;
             }
-          
+         
             // add parameters from matched to the property
             foreach ($matched as $key => $value) {
                 
@@ -126,9 +130,8 @@ class Router
                     $this->parameters[$key] = $value;
                 }
             }
-
+           
             $this->matchedRoute = $matched[0];
-            dd($this->matchedRoute);
 
             // return matched route
             return $route;

@@ -2,8 +2,7 @@
 
 namespace Qss\Traits;
 
-use Qss\Http\Middleware\Middlewares\AuthMiddleware;
-use Qss\Http\Middleware\Middlewares\CookieMiddleware;
+use Qss\Http\Middleware\AuthMiddleware;
 
 
 trait RequestMethods
@@ -28,17 +27,13 @@ trait RequestMethods
         return $this;
     }
 
-    public function middleware(bool $auth = false, bool $cookie = false, string $route)
+    public function withAuthMiddleware(string $route)
     {
+        /** @var RootMiddleware $middleware */
+        $middleware = $this->container->get("middleware");
 
-        if($auth === true){
-            $this->container->get("middleware")->addMiddleware(new AuthMiddleware, $route);
-        }
-
-        if($cookie === true){
-            $this->container->get("middleware")->addMiddleware(new CookieMiddleware, $route);
-        }
-
+        $middleware->addMiddleware(new AuthMiddleware, $route);
+    
         return true;
     }
 }

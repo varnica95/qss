@@ -49,8 +49,8 @@ class LoginController extends Controller
         if($request->has("remember_me") === true){
             Cookie::set('cookie_token', $tokenKey);
         }
-        
-       
+    
+   
         return $this->redirect("/");
     }
 

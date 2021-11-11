@@ -47,9 +47,9 @@ class ParameterBag
      *
      * @return void
      */
-    public function getAll()
+    public function getAll(string $method)
     {
-      return $this->parameters["post"];
+      return $this->parameters[$method];
     }
 
 }

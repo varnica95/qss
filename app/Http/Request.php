@@ -92,7 +92,7 @@ class Request
         $ret["message"] = null;
         $ret["error"] = true;
 
-        $parameters = $this->container->get("parameter_bag")->getAll();
+        $parameters = $this->container->get("parameter_bag")->getAll("post");
 
         if(empty($parameters)){
             return $ret;
@@ -112,5 +112,21 @@ class Request
 
         $ret["error"] = false;
         return $ret;	
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public function getQueryString() 
+    {
+        $parameters = $this->container->get("parameter_bag")->getAll("get");
+
+        if(empty($parameters)){
+            return null;
+        }
+
+        return "?" . http_build_query($parameters);
     }
 }

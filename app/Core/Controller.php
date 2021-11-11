@@ -23,6 +23,16 @@ class Controller
     /**
      * Undocumented function
      *
+     * @return void
+     */
+    protected function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
+     * Undocumented function
+     *
      * @param [type] $url
      * @return void
      */
