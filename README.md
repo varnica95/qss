@@ -17,7 +17,14 @@ Created by: Marin Varnica
     - [Matching a route](#matching-a-route)
 - [Http](#http)
     - [Controllers](#controllers)
-    - [Matching a route](#matching-a-route)
+    - [Middleware](#middleware)
+    - [Request](#request)
+    - [Response](#response)
+- [Front](#front)
+    - [Views](#views)
+    - [Resources](#resources)
+        - [How to render a view?](#how-to-render-a-view-?)
+- [QSS API](#qss-api)
 
 # Getting started
 
@@ -243,5 +250,238 @@ todo: 404
 
 - Every created controller must have the method written in "config/web.php"
 - Each method includes dependeny injection (autowiring)
-    - It can have Request
-    - It must return Response
+- There is four different controllers:
+    - LoginController, HomeController, AuthorController and BookController
+- Each method can have Request as a parameter, and can return Response
+- Also, it can redirect to certain page
+
+```php
+<?php
+
+public function index(Request $request, QssApiService $qssApiService)
+    {
+        $userResponse = $qssApiService->getCurrentlyLoggedUser();
+
+        if($userResponse["error"] === true) {    
+            return $this->redirect("/login");
+        }
+
+        return $this->view('home.index', [
+            "first_name" => $userResponse["response"]["first_name"],
+            "last_name" => $userResponse["response"]["last_name"]
+        ]);
+    }
+```
+
+## Middleware
+
+- Its power is to stay between request and response
+- To add the middleware, go to "config/web.php"
+
+```php
+<?php
+
+$app->get("/", [Qss\Http\Controllers\HomeController::class, "index"])->withAuthMiddleware("/");
+
+ public function __invoke($next, Request $request, $route)
+    {
+        if($route === $request->getMatchedRoute()){
+            if (Session::get('session_token') === null){
+                $request->redirect("/login");
+            }
+
+            if (Cookie::get('cookie_token') !== null && empty($_SESSION)){
+                Session::set('session_token', Cookie::get('cookie_token'));
+                $request->redirect("/");
+            }
+        }
+
+        return $next($request);
+    }
+```
+
+## Request
+
+- Request can grab POST or GET parameters with ParameterBag instance
+- Validate form values
+
+## Response
+
+- Response is used from setting status code, url, content
+
+
+# Front
+
+- View class is responsible for rendering any html
+
+## Views
+
+- Method "render" returns variables: document_name, array data, file path.
+- It also includes base app file app.phtml.
+
+```php
+<?php
+
+public function render(string $path, array $data = [])
+    {       
+        $part = str_replace(".", "/", $path);
+        $file = $this->getFile($part);
+       
+        $document_name = ucfirst(explode(".", $path)[0]);
+
+        array_push($data, $document_name, $file);
+
+        extract($data, EXTR_SKIP);
+       
+        ob_start();
+        try {
+            extract($data, EXTR_SKIP);
+            require $this->getFile("app");
+        } catch (\Exception $e) {
+            ob_end_clean();
+            throw $e;
+        }
+
+        $output = ob_get_clean();
+
+        return $output;
+    }
+```
+
+## Resources
+
+- Resources/views are directory which contains all the markup.
+- There is: login, home, author and book page
+
+### How to render a view?
+
+- In any controller, use the "view" method.
+- Second parameter is associative array with data
+
+ ```php
+<?php
+
+$this->view('home.index', ["id" => 5]);
+
+protected function view(string $path, array $data = [])
+    {
+         /** @var View $view */
+        $view = $this->container->get("view");
+         /** @var Response $response */
+        $response = $this->container->get("response");
+         /** @var Router $response */
+        $router = $this->container->get("router");
+
+        $content = $view->render($path, $data);
+
+        $response->setContent($content);
+
+        return $response;
+    }
+
+private function processRespond($respond)
+{
+
+        if (!$respond instanceof Response){
+            echo $respond;
+            return true;
+        }
+    
+        header("Location: " . $respond->getUrl(), true, $respond->getCode());
+
+        if(is_readable($respond->getContent())){
+            include $respond->getContent();
+        } else {
+            echo $respond->getContent();
+        }
+
+        return true;
+    }
+```
+
+
+ ```php
+<?php if(isset($id)): ?>
+       <p>  <?php echo $id; ?></p>
+<?php endif; ?>
+
+```
+
+# QSS API
+
+- This class is used for connecting to Q Symfony skeleton api
+- It is using curl for it
+- Used methods:
+    - token = For auth
+    - me = for getting currenly signed user
+    - author = for fetching author list (it also uses query string) and for getting the author details, deleting authors
+    - books = for inserting a new book and deleting books
+
+
+
+ ```php
+   private function callCUrl(string $url, string $method, array $headers = [], $data = null)
+    {
+        $ret = array();
+        $ret["message"] = null;
+        $ret["error"] = true;
+        $ret["code"] = 200;
+        $ret["response"] = null;
+
+        try {
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => $method,
+                CURLOPT_POSTFIELDS => $data,
+                CURLOPT_HTTPHEADER => $headers,
+            ));
+
+            $response = curl_exec($curl);
+            curl_close($curl);
+
+        } catch (\Exception $e) {
+            $ret["message"] = $e->getMessage();
+        }
+        
+
+        $responseArray = json_decode($response, TRUE);
+
+        if(isset($responseArray["error"])){
+            $ret["message"] = $responseArray["error"];
+            $ret["code"] = $responseArray["code"];
+            return $ret;
+        }
+
+        $ret["error"] = false;
+        $ret["response"] = $responseArray;
+            
+        return $ret;
+    }
+
+```
+
+
+ ```php
+public function deleteBook(string $bookId)
+    {
+        $url = self::API_URL . "books/" . $bookId;
+
+        $headers = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . Session::get('session_token')
+        );
+
+        $response = $this->callCUrl($url, "DELETE", $headers);
+        
+        return $response;
+}
+```
