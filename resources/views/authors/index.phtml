@@ -1,3 +1,10 @@
+<?php if(empty($authors)): ?>
+  <p>There is no authors</p>
+  <?php else: ?>
+<div>
+    <p>Total results: <?php echo $meta["total_results"]; ?></p>
+</div>
+
 <table>
   <tr>
     <th>ID</th>
@@ -6,6 +13,7 @@
     <th>Birthday</th>
     <th>Gender</th>
     <th>Place of birth</th>
+    <th>Delete</th>
   </tr>
   <?php foreach ($authors as $author): ?>
     <tr>
@@ -15,6 +23,13 @@
         <td>  <?php echo $author["birthday"]; ?></td>
         <td>  <?php echo $author["gender"]; ?></td>
         <td>  <?php echo $author["place_of_birth"]; ?></td>
+        <td>
+          
+            <form action="/delete-author/<?php echo $author["id"]; ?>" method="POST">
+                <button type="submit">Delete</button>  
+            </form>
+        
+        </td>
     </tr>
   <?php endforeach; ?>
 </table>
@@ -25,30 +40,4 @@
     <?php endfor; ?>
 </div>
 
-
-<h3>Custom query</h3>
-
-<form action="/authors" method="GET">
-  
-    <div class="form-group">
-        <label for="orderBy">Order by</label>
-        <input type="text" placeholder="Enter order" name="orderBy">
-    </div>
-
-    <div class="form-group">
-        <label for="direction">Direction</label>
-        <input type="text" placeholder="ASC or DESC" name="direction">
-    </div>
-    
-    <div class="form-group">
-        <label for="limit">limit</label>
-        <input type="text" placeholder="ASC or DESC" name="limit">
-    </div>
-
-    <div class="form-group">
-        <label for="page">Page</label>
-        <input type="text" placeholder="page" name="page">
-    </div>
-
-    <button type="submit">Generate</button>  
-</form>
+<?php endif; ?>

@@ -1,5 +1,5 @@
 <?php if($author === null): ?>
-  <p>Author not found</p>
+  <p>The author is not found</p>
   <?php else: ?>
 <div>
     <p>Name: <?php echo $author["first_name"] . " " . $author["last_name"]; ?></p>
@@ -9,6 +9,10 @@
     <p>Place of birth: <?php echo $author["place_of_birth"]; ?></p>
 </div>
 
+
+<?php if(empty($author["books"])): ?>
+  <p>The author does not have any book</p>
+  <?php else: ?>
 <table>
   <tr>
     <th>ID</th>
@@ -29,7 +33,7 @@
         <td>  <?php echo $book["number_of_pages"]; ?></td>
         <td>
           
-            <form action="/authors/<?php echo $author["id"]; ?>/books/<?php echo $book["id"]; ?>/delete" method="POST">
+            <form action="/books/<?php echo $author["id"]; ?>/<?php echo $book["id"]; ?>" method="POST">
                 <button type="submit">Delete</button>  
             </form>
         
@@ -37,4 +41,5 @@
     </tr>
   <?php endforeach; ?>
 </table>
+<?php endif; ?>
 <?php endif; ?>

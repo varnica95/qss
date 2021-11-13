@@ -1,4 +1,10 @@
-<?php echo isset($error_message) ? $error_message : ''; ?>
+<?php 
+Qss\Includes\Session::destroy();
+Qss\Includes\Cookie::unset("cookie_token");
+
+echo isset($error_message) ? $error_message : ''; 
+
+?>
 <form action="/login/store-token" method="POST">
   
     <div class="form-group">

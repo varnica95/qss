@@ -1,0 +1,57 @@
+<?php echo isset($error_message) ? $error_message : ''; ?>
+<form action="/books" method="POST">
+  
+    <div class="form-group">
+        <label for="email">Author</label>
+        <input list="authors" name="author">
+            <datalist id="authors">
+            <?php foreach($authors as $author): ?>
+                <option value="<?php echo $author["id"] . " - " . $author["first_name"] . " " . $author["last_name"]  ?>">
+            <?php endforeach; ?>
+            </datalist>
+    </div>
+    
+
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" placeholder="Enter book title" name="title">
+    </div>
+
+    <div class="form-group">
+        <label for="release_date">Release date</label>
+        <input type="datetime-local" placeholder="Enter release date" name="release_date">
+    </div>
+
+    <div class="form-group">
+        <label for="description">Description</label><br>
+        <textarea name="description" rows="5" cols="50"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="isbn">Isbn</label>
+        <input type="text" placeholder="Enter isbn" name="isbn">
+    </div>
+
+    <div class="form-group">
+        <label for="format">Format</label>
+        <input type="text" placeholder="Enter format" name="format">
+    </div>
+
+    <div class="form-group">
+        <label for="number_of_pages">Number of pages</label>
+        <input type="number" placeholder="Enter number of pages" name="number_of_pages">
+    </div>
+
+    <button type="submit">Add new book</button>
+
+</form>
+
+
+<h2>Show author page for:</h2>
+
+
+<select onchange="window.open(this.value)">
+ <?php foreach($authors as $author): ?>
+         <option value="authors/<?php echo $author["id"] ?>"><?php echo $author["first_name"] . " " . $author["last_name"] ?></option>
+<?php endforeach; ?>
+</select>
