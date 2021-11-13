@@ -2,6 +2,45 @@
 Backend test  assignment for Q agency.
 Created by: Marin Varnica
 
+
+# Procedures
+- The application starts from "public/index.php". To be more percise, it starts from the App's method "run".
+    - It matches given routes and current path. (Path and request method)      
+        - If the match was not found, it will throw an exception (404 error)     
+        - If it was found, it will process the given handler (controller and its method)
+- To process the given handler, firstly it makes an instance of the object.
+- With the help of "Reflection" it takes all of the method's parameters and grabs them from the container.   
+- Parameters without typehints are parameters from the matched route.
+    - Example: author/{authorId} -> author/100
+    - Value of "authorId" parameter in the method will be 10.
+- Each method can have the Request as a parameter. For example, it can grab POST, GET parameters, it can also go through the auth middleware. 
+- After the controller's method has successfully been started - each method has its own functionallity: 
+    - LoginController::index - gives the login page where the user can enter login credentials
+        - those credentials are passed to the QSS API's method token in the json format 
+        - If everything is fine, from API's response, we grab token key.
+        - Based on "remember_me" it uses Session or Cookie
+            - If "remember_me" is not checked, Session will last until the browser is closed.
+            - If it checked, cookie will be created and on the next visit, session will be generated based on the cookie.
+    - LoginController::logout - destroys cookie and session
+    - HomeController::index - gives the home page and shows first and last name.
+        - It uses API's method "me" to grab currently logged user
+    - AuthorController::index - shows the list of authors (with pagination)
+        - it uses API's method "author" for fetching authors
+    - AuthorController::showAuthor - shows author details
+        - it uses API's method "author" for fetching details
+    - AuthorController::deleteAuthor - deleting author
+        - it uses API's method "author" for deleting
+            	- The author is deletable if he/she does not have books.
+    - BookController::index - fetching author list 
+        - it uses API's method "author" for fetching
+            - the list is used for "which author to use" in adding a book and showing
+    - BookController::addNewBook - fetching author list 
+        - it uses API's method "book" for adding
+            - The data from POST (author, title, description, isbn, number_of_pages, format, release_date) is passed in the json format
+    - BookController::deleteBook - delting the book
+        - it uses API's method "book" for deleting
+
+
 ## Table of Contents
 
 - [Getting started](#getting-started)
@@ -20,6 +59,9 @@ Created by: Marin Varnica
     - [Middleware](#middleware)
     - [Request](#request)
     - [Response](#response)
+- [Includes](#http)
+    - [Session](#session)
+    - [Cookie](#cookie)
 - [Front](#front)
     - [Views](#views)
     - [Resources](#resources)
@@ -46,12 +88,7 @@ The App class is the main class for the project. It is creating new Container cl
 ```php
 <?php
 
-/**
-     * Undocumented function
-     *
-     * @return void
-     */
-    public function run()
+public function run()
     {
         /** @var Router $router */
         $router = $this->container->get("router");
@@ -65,15 +102,13 @@ The App class is the main class for the project. It is creating new Container cl
          */
         try{
             $handler = $router->getRouteHandler();
-            $respond = $this->processHandler($handler);
         } catch(\Exception $e){
-            dd($e);
-
-            /**
-             * //todo: 404
-             */
+            $this->container->get('response')->setCode(404);
+            $handler = ["message" => $e->getMessage()];
         }
         
+        $respond = $this->processHandler($handler);
+
         return $this->processRespond($respond);
     }
 ```
@@ -244,6 +279,7 @@ todo: 404
 - Http includes:
     - Controllers
     - Request
+    - Middleware
     - Response
 
 ## Controllers
@@ -308,6 +344,18 @@ $app->get("/", [Qss\Http\Controllers\HomeController::class, "index"])->withAuthM
 ## Response
 
 - Response is used from setting status code, url, content
+
+# Includes 
+
+The Includes folder contains Session and Cookie
+
+## Session
+
+- If the "remember_me" checkbox is not checked (login page), Session token will be created. It will be destroyed after the browser is closed
+
+## Cookie
+
+- If the "remember_me" checkbox is checked (login page), Cookie will be created. On the next visit, if the cookie exists, session will be generated.
 
 
 # Front
