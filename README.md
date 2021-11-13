@@ -1,7 +1,7 @@
 # Q Symfony Skeleton Api project
 ## Backend test  assignment for Q agency.
 ### Created by: Marin Varnica
-### Used: PHP, HTML, CSS, Postman
+### Used: PHP, HTML, CSS, Postman, Composer
 
 
 # Procedures
