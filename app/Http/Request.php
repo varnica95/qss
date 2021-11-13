@@ -106,6 +106,36 @@ class Request
             $ret["message"] = "Password cannot be empty";
         }
 
+        if(isset($parameters["author"]) && empty($parameters["author"])){
+            $ret["message"] = "Author cannot be empty";
+        }
+
+        if(isset($parameters["author"]) && empty($parameters["author"])){
+            $ret["message"] = "Author cannot be empty";
+        }
+
+        if(isset($parameters["release_date"]) && empty($parameters["release_date"])){
+            $ret["message"] = "Release date cannot be empty";
+        }
+
+        if(isset($parameters["description"]) && empty($parameters["description"])){
+            $ret["message"] = "Description cannot be empty";
+        }
+
+        if(isset($parameters["isbn"]) && empty($parameters["isbn"])){
+            $ret["message"] = "Isbn date cannot be empty";
+        }
+
+        if(isset($parameters["format"]) && empty($parameters["format"])){
+            $ret["message"] = "Format cannot be empty";
+        }
+
+        if(isset($parameters["number_of_pages"]) && empty($parameters["number_of_pages"])){
+            $ret["message"] = "Number of pages cannot be empty";
+        }
+
+
+
         if(!empty($ret["message"])){
             return $ret;
         }

@@ -24,17 +24,22 @@ class QssApiService
         $this->container = $container;
     }
 
+    /**
+     * Calling api
+     *
+     * @param string $url
+     * @param string $method
+     * @param array $headers
+     * @param [type] $data
+     * @return void
+     */
     private function callCUrl(string $url, string $method, array $headers = [], $data = null)
     {
         $ret = array();
         $ret["message"] = null;
         $ret["error"] = true;
+        $ret["code"] = 200;
         $ret["response"] = null;
-
-        $headersData = array('Content-Type: application/json');
-        if(!empty($headers)){
-            $headersData[] = $headers;
-        }
 
         try {
 
@@ -65,6 +70,7 @@ class QssApiService
 
         if(isset($responseArray["error"])){
             $ret["message"] = $responseArray["error"];
+            $ret["code"] = $responseArray["code"];
             return $ret;
         }
 
@@ -93,19 +99,77 @@ class QssApiService
         return $response;
     }
 
-   
+    public function getCurrentlyLoggedUser()
+    {
+        $url = self::API_URL . "me";
+
+        $headers = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . Session::get('session_token')
+        );
+
+        $response = $this->callCUrl($url, "GET", $headers);
+
+        return $response;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param [type] $queryString
+     * @return void
+     */
+    public function fetchAuthorList($queryString = null)
+    {
+        $url = self::API_URL . "authors" . $queryString;
+
+        $headers = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . Session::get('session_token')
+        );
+
+        $response = $this->callCUrl($url, "GET", $headers);
+
+        return $response;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param [type] $authorId
+     * @return void
+     */
+    public function getAuthorDetails($authorId)
+    {
+        $url = self::API_URL . "authors/" . $authorId;
+
+        $headers = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . Session::get('session_token')
+        );
+
+        $response = $this->callCUrl($url, "GET", $headers);
+
+        return $response;
+    }
+
     /**
      * Undocumented function
      *
      * @return void
      */
-    public function get(string $method, string $query = null)
+    public function addNewBook(array $data)
     {
-        $url = self::API_URL . $method . $query;
+        $url = self::API_URL . "books";
 
-        $headers = array("Authorization: Bearer " . Session::get('session_token'));
+        $dataJson = json_encode($data);
 
-        $response = $this->callCUrl($url, "GET", $headers);
+        $headers = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . Session::get('session_token')
+        );
+
+        $response = $this->callCUrl($url, "POST", $headers, $dataJson);
 
         return $response;
     }
@@ -119,7 +183,29 @@ class QssApiService
     {
         $url = self::API_URL . "books/" . $bookId;
 
-        $headers = array("Authorization: Bearer " . Session::get('session_token'));
+        $headers = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . Session::get('session_token')
+        );
+
+        $response = $this->callCUrl($url, "DELETE", $headers);
+        
+        return $response;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public function deleteAuthor(string $authorId)
+    {
+        $url = self::API_URL . "authors/" . $authorId;
+
+        $headers = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . Session::get('session_token')
+        );
 
         $response = $this->callCUrl($url, "DELETE", $headers);
         

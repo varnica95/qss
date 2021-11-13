@@ -16,11 +16,21 @@ class Router
     protected $matchedRoute;
 
 
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
     public function getMatchedRoute()
     {
         return $this->matchedRoute;
     }
 
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
     public function getParameters()
     {
         return $this->parameters;
@@ -84,6 +94,7 @@ class Router
         return $this->routes[$route];
     }
 
+
     /**
      * Method for getting a matched route
      *
@@ -131,7 +142,7 @@ class Router
                 }
             }
            
-            $this->matchedRoute = $matched[0];
+            $this->matchedRoute = $route;
 
             // return matched route
             return $route;

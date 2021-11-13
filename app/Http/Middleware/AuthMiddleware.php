@@ -10,11 +10,17 @@ use Qss\Includes\Session;
 class AuthMiddleware
 {
 
+    /**
+     * Undocumented function
+     *
+     * @param [type] $next
+     * @param Request $request
+     * @param [type] $route
+     * @return void
+     */
     public function __invoke($next, Request $request, $route)
     {
-        $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-
-        if($currentPath === $request->getMatchedRoute()){
+        if($route === $request->getMatchedRoute()){
             if (Session::get('session_token') === null){
                 $request->redirect("/login");
             }

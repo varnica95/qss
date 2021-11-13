@@ -20,7 +20,7 @@ class HomeController extends Controller
      */
     public function index(Request $request, QssApiService $qssApiService)
     {
-        $userResponse = $qssApiService->get("me");
+        $userResponse = $qssApiService->getCurrentlyLoggedUser();
 
         if($userResponse["error"] === true) {    
             return $this->redirect("/login");

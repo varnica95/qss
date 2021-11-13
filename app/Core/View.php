@@ -14,7 +14,7 @@ class View
      */
     public function render(string $path, array $data = [])
     {       
-        $part = str_replace(".", "\\", $path);
+        $part = str_replace(".", "/", $path);
         $file = $this->getFile($part);
        
         $document_name = ucfirst(explode(".", $path)[0]);
@@ -45,7 +45,7 @@ class View
     private function getFile(string $part)
     {
         
-        $file = dirname(__DIR__) . "\\..\\resources\\views\\{$part}.phtml";
+        $file = dirname(__DIR__) . "/../resources/views/{$part}.phtml";
      
         if(!is_readable($file) || !is_file($file)){
             throw new \Exception("Cannot read {$file}");

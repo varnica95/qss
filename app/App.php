@@ -42,15 +42,13 @@ class App
          */
         try{
             $handler = $router->getRouteHandler();
-            $respond = $this->processHandler($handler);
         } catch(\Exception $e){
-            dd($e);
-
-            /**
-             * //todo: 404
-             */
+            $this->container->get('response')->setCode(404);
+            $handler = ["message" => $e->getMessage()];
         }
         
+        $respond = $this->processHandler($handler);
+
         return $this->processRespond($respond);
     }
 
@@ -62,6 +60,9 @@ class App
      */
     private function processHandler(array $handler)
     {
+        if(isset($handler["message"])){
+            return $handler["message"];
+        }
         /**
          * Handler cannot be a object
          */

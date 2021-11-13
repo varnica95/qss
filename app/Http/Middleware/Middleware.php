@@ -7,8 +7,12 @@ use Qss\Http\Middleware\AuthMiddleware;
 
 class Middleware
 {
+    /** @var $root */
     protected $root;
 
+    /**
+     * Undocumented function
+     */
     public function __construct()
     {
         $this->root = function (Request $request){
@@ -16,6 +20,13 @@ class Middleware
         };
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param AuthMiddleware $middleware
+     * @param [type] $route
+     * @return void
+     */
     public function addMiddleware(AuthMiddleware $middleware, $route)
     {
         $next = $this->root;
@@ -25,6 +36,12 @@ class Middleware
         };
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @return void
+     */
     public function handle(Request $request)
     {
         return call_user_func($this->root, $request);

@@ -36,12 +36,12 @@ class Controller
      * @param [type] $url
      * @return void
      */
-    protected function redirect($url)
+    protected function redirect($url, $code = 301)
     {
         /** @var Response $response */
         $response = $this->container->get("response");
         
-        $response->setCode(301);
+        $response->setCode($code);
         $response->setUrl($url);
 
         return $response;
