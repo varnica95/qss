@@ -27,6 +27,12 @@ trait RequestMethods
         return $this;
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param string $route
+     * @return void
+     */
     public function withAuthMiddleware(string $route)
     {
         /** @var RootMiddleware $middleware */

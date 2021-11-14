@@ -4,8 +4,6 @@ namespace Qss\Http\Controllers;
 
 use Qss\Http\Request;
 use Qss\Core\Controller;
-use Qss\Includes\Cookie;
-use Qss\Includes\Session;
 use Qss\QSymfonySkeletonApi\QssApiService;
 
 

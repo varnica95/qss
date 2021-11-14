@@ -8,6 +8,13 @@ use Qss\QSymfonySkeletonApi\QssApiService;
 
 class BookController extends Controller
 {
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @param QssApiService $qssApiService
+     * @return void
+     */
     public function index(Request $request, QssApiService $qssApiService)
     {
         $authorsResponse = $qssApiService->fetchAuthorList("?limit=100");
@@ -21,8 +28,12 @@ class BookController extends Controller
     }
 
      /**
-     *
-     */
+      * Undocumented function
+      *
+      * @param Request $request
+      * @param QssApiService $qssApiService
+      * @return void
+      */
     public function addNewBook(Request $request, QssApiService $qssApiService)
     {
         $validation = $request->validateParameters();
@@ -49,7 +60,13 @@ class BookController extends Controller
     }
 
     /**
+     * Undocumented function
      *
+     * @param Request $request
+     * @param QssApiService $qssApiService
+     * @param [type] $authorId
+     * @param [type] $bookId
+     * @return void
      */
     public function deleteBook(Request $request, QssApiService $qssApiService, $authorId, $bookId)
     {
